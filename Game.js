@@ -20,14 +20,14 @@ BasicGame.Game.prototype = {
             music.stop();
             this.state.start('MainMenu')}, this);
 
-        this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.M);
-        this.key1.onDown.add(changevolume, this);
+        //this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.M);
+        //this.key1.onDown.add(changevolume, this);
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.theta = 0;
-        this.LIGHT_RADIUS = 250;
+        this.LIGHT_RADIUS = 300;
         this.numberofbaddies = MAJORBADDIES;
-        this.numberofbombs = MAJORBOMBS;
+        this.numberofbombs = MAJORBOMBS + 10;
         this.p = {x : 0, y : 0};
         this.nextdir = [];
 
@@ -114,17 +114,17 @@ BasicGame.Game.prototype = {
         this.bombtext.fixedToCamera = true;
 
 
-        this.times = this.add.text(10,gameheight,totalseconds+'s',{ font: '30px Arial', fill: '#ffffff' });
-        this.times.anchor.setTo(0,1);
-        this.times.fixedToCamera = true;
-        this.game.time.events.loop(1000, this.updatetime, this);
+        //this.times = this.add.text(10,gameheight,totalseconds+'s',{ font: '30px Arial', fill: '#ffffff' });
+        //this.times.anchor.setTo(0,1);
+        //this.times.fixedToCamera = true;
+        //this.game.time.events.loop(1000, this.updatetime, this);
 
-        this.leveltext = this.add.text(10,10,"World "+mazenumber,{ font: '20px Arial', fill: '#ffffff' });
-        this.leveltext.fixedToCamera = true;
+        //this.leveltext = this.add.text(10,10,"World "+mazenumber,{ font: '20px Arial', fill: '#ffffff' });
+        //this.leveltext.fixedToCamera = true;
 
-        this.enemykills = this.add.text(this.game.width-10,this.game.height-10,enemytotal+' kills',{ font: '20px Arial', fill: '#ffffff' });
-        this.enemykills.anchor.setTo(1,1);
-        this.enemykills.fixedToCamera = true;
+        //this.enemykills = this.add.text(this.game.width-10,this.game.height-10,enemytotal+' kills',{ font: '20px Arial', fill: '#ffffff' });
+        //this.enemykills.anchor.setTo(1,1);
+        //this.enemykills.fixedToCamera = true;
 	},
     updatetime : function(){
         totalseconds++;
@@ -147,22 +147,26 @@ BasicGame.Game.prototype = {
         this.player.body.velocity.y = 0;
 
         this.currentSpeed = 0;
+        var playerSpeed = 100;
         if (this.cursors.left.isDown)
         {
-            this.player.angle -= 4;
+            this.player.angle = 180;
+            this.currentSpeed = playerSpeed;
         }
         else if (this.cursors.right.isDown)
         {
-            this.player.angle += 4;
+            this.player.angle = 0;
+            this.currentSpeed = playerSpeed;
         }
-
         if (this.cursors.up.isDown)
         {
-            this.currentSpeed = 200;
+            this.player.angle = 270;
+            this.currentSpeed = playerSpeed;
         }
         if (this.cursors.down.isDown)
         {
-            this.currentSpeed = -200;
+            this.player.angle = 90;
+            this.currentSpeed = playerSpeed;
         }
         if (this.currentSpeed != 0)
         {
@@ -178,20 +182,29 @@ BasicGame.Game.prototype = {
     },
 
     playerenemycollision : function(a,b){
-        if(this.bombpoints==0){
+        var grunt = this.add.audio('grunt',1,true);
+        grunt.play('',0,1,false);
+        if(this.LIGHT_RADIUS <= 50){
             music.stop();
             this.state.start('EndScreen');
         }
-        b.kill();
-        this.bombpoints--;
+        this.LIGHT_RADIUS -= 50;
+        if(this.LIGHT_RADIUS < 50)
+        {
+            this.LIGHT_RADIUS = 50;
+        }
         enemytotal++;
-        this.bombtext.setText(this.bombpoints);
+        b.kill();
+        //this.bombtext.setText(this.bombpoints);
     },
 
     handlebombcollection : function(a,b){
         b.kill();
         this.bombpoints++;
-        this.bombtext.setText(this.bombpoints);
+        var match = this.add.audio('matchNoise',1,true);
+        match.play('',0,1,false);
+        this.LIGHT_RADIUS += 100;
+        //this.bombtext.setText(this.bombpoints);
 
     },
 
@@ -249,13 +262,13 @@ BasicGame.Game.prototype = {
         this.shadowTexture.context.fillStyle = 'rgb(0,0,0)';
         this.shadowTexture.context.fillRect(0, 0, mazesize*50, mazesize*50);
 
-        this.radius = this.LIGHT_RADIUS/2 + 30*Math.cos(this.theta);//this.game.rnd.integerInRange(1,20);
-        this.theta += 0.1;
-        if(this.theta>2*Math.PI){
-            this.theta = 0;
+        this.radius = this.LIGHT_RADIUS + 30*Math.cos(this.theta);//this.game.rnd.integerInRange(1,20);
+        //this.theta += 0.1;
+        if(this.LIGHT_RADIUS > 50)
+        {
+        this.LIGHT_RADIUS -= .3;
         }
-        
-        var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS * 0.1,this.player.x, this.player.y, this.radius);
+        var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS * .1,this.player.x, this.player.y, this.radius);
         gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
 
