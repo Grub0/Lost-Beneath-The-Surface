@@ -2,23 +2,23 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>Subterranean</title>
-	<script src="phaser.min.js"></script>
+	<title>LOST Beneath the Surface</title>
+	<script src="phaser.js"></script>
 	<script src="Maze.js"></script>
 	<script src="Boot.js"></script>
 	<script src="Preloader.js"></script>
 	<script src="MainMenu.js"></script>
 	<script src="Game.js"></script>
 </head>
-<body style="background-color:#000; margin:0 auto;">
+<body style="background-color:#000;">
 
-<div id="gameContainer" style="width:1000px; margin:0 auto; border-style:solid;
+<div id="gameContainer" style="width:500px; margin:0 auto; border-style:solid;
 border-color:#fff;"></div>
 
 <script type="text/javascript">
 
-var gamewidth = 1000;
-var gameheight = 900;
+var gamewidth = 500;
+var gameheight = 450;
 var mazesize=40;
 var spread = 0;
 var MAJORBOMBS = 10;
@@ -27,13 +27,6 @@ var enemytotal=0;
 var totalseconds = 0;
 var mazenumber = 0;
 var music;
-var violin;
-var piano;
-var pianoPlaying = false;
-var violinPlaying = false;
-var violinLoud = false;
-var violinLouder = false;
-var playerFrame = 0;
 window.onload = function() {
 
 	//	Create your Phaser game and inject it into the gameContainer div.
@@ -54,8 +47,12 @@ window.onload = function() {
 };
 
 </script>
-<div style="width:500px; text-align:center; margin:0 auto; text-color:#fff; font-size:large; z-index:100;">
-<font color="white"><p></p>
+<div style="width:500px; text-align:center; margin:0 auto; text-color:#fff; font-size:large;">
+<font color="white"><p>You're a firefly and you're lost in the dark, beneath the surface.
+	To survive, use the firefly helmets you find to kill the horrors in the dark and run through the mazes they create.</p>
+	<p>Use arrow keys to move around. The number of helmets are in the upper right corner. Touching a horror without the helmet is instant death.</p>
+
+	<p>SURVIVE!</p>
 </font></div>
 </body>
 </html>

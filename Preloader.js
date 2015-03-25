@@ -20,6 +20,7 @@ BasicGame.Preloader.prototype = {
 		this.load.setPreloadSprite(this.preloadBar);
 
 		this.load.image('firebug','assets/fb2.png');
+        this.load.image('firebug2','assets/fb3.png');
 		this.load.image('firebuglight','assets/fb2.png');
 		this.load.image('tiles','assets/tiles2.png');
 		this.load.image('title','assets/title2.png');
@@ -28,14 +29,14 @@ BasicGame.Preloader.prototype = {
 		this.load.spritesheet('skullbomb','assets/matchBlack.png',200,200);
 		this.load.spritesheet('static','assets/static3.png',gamewidth,gameheight);
 		this.load.spritesheet('skullbombwhite','assets/matchWhite.png',200,200);
-		this.load.spritesheet('play','assets/play2.png',107,41);
+		this.load.spritesheet('play','assets/play2.png',105,36);
 		this.load.audio('titleMusic',['assets/music.mp3','assets/music.ogg']);
         this.load.audio('matchNoise','assets/match.mp3');
         this.load.audio('creak','assets/audio/creaking.ogg');
         this.load.audio('grunt','assets/audio/grunt2.ogg');
-
-
-		
+        this.load.audio('roar','assets/audio/roar.ogg');
+        this.load.audio('violin','assets/audio/violin.ogg');
+        this.load.audio('piano','assets/audio/piano.ogg');
 	},
 
 	create: function () {
