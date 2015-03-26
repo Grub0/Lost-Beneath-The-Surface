@@ -2,13 +2,16 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>Subterranean</title>
+	<title>Chiaroscuro</title>
 	<script src="phaser.min.js"></script>
 	<script src="Maze.js"></script>
 	<script src="Boot.js"></script>
 	<script src="Preloader.js"></script>
 	<script src="MainMenu.js"></script>
 	<script src="Game.js"></script>
+    <link rel="icon" 
+      type="image/ico" 
+      href="favicon.ico" />
 </head>
 <body style="background-color:#000; margin:0 auto;">
 
@@ -38,6 +41,7 @@ var playerFrame = 0;
 var score = 0;
 var decayRate = .2;
 var numMatches = 15;
+    var closeToEnemy;
 window.onload = function() {
 
 	//	Create your Phaser game and inject it into the gameContainer div.
@@ -52,6 +56,7 @@ window.onload = function() {
 	game.state.add('Game', BasicGame.Game);
 	game.state.add('EndScreen',BasicGame.EndScreen);
 	game.state.add('Transition',BasicGame.Transition);
+    game.state.add('HowTo',BasicGame.HowTo);
 	//	Now start the Boot state.
 	game.state.start('Boot');
 

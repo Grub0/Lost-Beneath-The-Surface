@@ -20,10 +20,20 @@ BasicGame.MainMenu.prototype = {
 		mazenumber = 0;
 		this.theta = 0;
 		enemytotal = 0;
-		this.titleimage = this.add.sprite(this.world.centerX, 0, 'title');
-		this.titleimage.anchor.setTo(0.5,0);
-		this.playButton = this.add.button(this.world.centerX, this.world.centerY+200, 'play', this.startGame, this, 1,0,2);
+        this.bloodimage = this.add.sprite(gamewidth-50, gameheight-200, 'blood');
+		this.bloodimage.anchor.setTo(0.5,0);
+        
+        this.enemyimage = this.add.sprite(this.world.centerX, this.world.centerY - 140, 'darkEnemy');
+		this.enemyimage.anchor.setTo(0.5,0);
+
+		this.titleimage = this.add.sprite(this.world.centerX, 10, 'title');
+        this.titleimage.anchor.setTo(0.5,0);
+
+		this.playButton = this.add.button(this.world.centerX, this.world.centerY+300, 'play', this.startGame, this, 1,0,2);
     	this.playButton.anchor.setTo(0.5,0.5);
+        
+        this.howButton = this.add.button(this.world.centerX, this.world.centerY+350, 'howto', this.goHowTo, this, 1,0,2);
+    	this.howButton.anchor.setTo(0.5,0.5);
 
 	},
 
@@ -32,7 +42,6 @@ BasicGame.MainMenu.prototype = {
 
 	update: function () {
 		//	Do some nice funky main menu effect here
-
 	},
 
 	startGame: function (pointer) {
@@ -43,10 +52,44 @@ BasicGame.MainMenu.prototype = {
 		//	And start the actual game
 		this.state.start('Game');
 
+	},
+	goHowTo: function (pointer) {
+		//	And start the actual game
+		this.state.start('HowTo');
+
 	}
 
 };
+BasicGame.HowTo = function (game) {};
 
+BasicGame.HowTo.prototype = {
+
+	create: function () {
+		this.titleimage = this.add.sprite(this.world.centerX, 10, 'title');
+        this.titleimage.anchor.setTo(0.5,0);
+        
+        		this.rulesimage = this.add.sprite(this.world.centerX, this.world.centerY - 300, 'howrules');
+        this.rulesimage.anchor.setTo(0.5,0);
+        
+        this.howButton = this.add.button(this.world.centerX, this.world.centerY+350, 'back', this.goMenu, this, 1,0,2);
+    	this.howButton.anchor.setTo(0.5,0.5);
+
+	},
+
+	updateFirbug: function(){
+	},
+
+	update: function () {
+		//	Do some nice funky main menu effect here
+	},
+
+	goMenu: function (pointer) {
+		//	And start the actual game
+		this.state.start('MainMenu');
+
+	}
+
+};
 BasicGame.EndScreen = function(game){};
 
 BasicGame.EndScreen.prototype = 

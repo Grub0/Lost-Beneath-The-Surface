@@ -25,11 +25,18 @@ BasicGame.Preloader.prototype = {
 		this.load.image('tiles','assets/tiles2.png');
 		this.load.image('title','assets/title2.png');
 		this.load.image('enemy1','assets/enemy2.png');
+        this.load.image('darkEnemy','assets/darkEnemy.png');
+        this.load.image('blood','assets/blood.png');
 		this.load.image('flag','assets/flag2.png');
+        		this.load.image('howrules','assets/howrules.png');
+
 		this.load.spritesheet('skullbomb','assets/matchBlack.png',200,200);
 		this.load.spritesheet('static','assets/static3.png',gamewidth,gameheight);
 		this.load.spritesheet('skullbombwhite','assets/matchWhite.png',200,200);
 		this.load.spritesheet('play','assets/play2.png',105,36);
+        		this.load.spritesheet('howto','assets/howto.png',105,36);
+        		this.load.spritesheet('back','assets/goback.png',105,36);
+
 		this.load.audio('titleMusic',['assets/music.mp3','assets/music.ogg']);
         this.load.audio('matchNoise','assets/match.mp3');
         this.load.audio('creak','assets/audio/creaking.ogg');

@@ -13,11 +13,6 @@ BasicGame.Game.prototype = {
 
 	create: function () {
         music.play('',0,1,true);
-        this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.B);
-        this.key2.onDown.add(function(){
-        this.stopThings;
-        this.state.start('MainMenu')}, this);
-
         //this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.M);
         //this.key1.onDown.add(changevolume, this);
 
@@ -125,7 +120,6 @@ BasicGame.Game.prototype = {
 	update: function () 
     {
         this.times.text = 'Score:'+score;
-        
 	    this.game.physics.arcade.collide(this.player, this.layer);
         this.game.physics.arcade.collide(this.player,this.flag,this.newmaze,null,this);
         this.game.physics.arcade.collide(this.player,this.enemies,this.playerenemycollision,null,this);
@@ -134,7 +128,8 @@ BasicGame.Game.prototype = {
         // if (this.game.time.fps !== 0) {
         //     this.fpsText.setText(this.game.time.fps + ' FPS');
         // }
-        this.enemies.forEach(this.handleenemyvelocity,this);
+        this.enemies.forEach
+        (this.handleenemyvelocity,this);
         // this.enemies.forEach(this.handlenemymovement,this);
 
         this.player.body.velocity.x = 0;
@@ -238,6 +233,15 @@ BasicGame.Game.prototype = {
             case 4 :    en.body.velocity.x = 0;
                         en.body.velocity.y = 50;
                         break;
+        }
+        if(Math.sqrt(((en.body.position.x - this.player.position.x)*(en.body.position.x - this.player.position.x))+((en.body.position.y - this.player.position.y)*(en.body.position.y - this.player.position.y))) < 100)
+        {
+            closeToEnemy = true;
+            console.log("close to enemy");
+        }
+        else
+        {
+            closeToEnemy = false;
         }
     },
 
@@ -356,9 +360,9 @@ BasicGame.Game.prototype = {
         }
         if(this.LIGHT_RADIUS <= 50)
         {
-                var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS *                         .1,this.player.x, this.player.y, this.radius);
-                gradient.addColorStop(0, 'rgba(255, 0, 0, 1.0)');
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+            var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS *                         .1,this.player.x, this.player.y, this.radius);
+            gradient.addColorStop(0, 'rgba(255, 0, 0, 1.0)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
         }
         else
         {
@@ -366,7 +370,6 @@ BasicGame.Game.prototype = {
         gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
         }
-
 
         this.shadowTexture.context.beginPath();
         this.shadowTexture.context.fillStyle = gradient;
