@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>Chiaroscuro</title>
+	<title>NOPE</title>
 	<script src="phaser.min.js"></script>
 	<script src="Maze.js"></script>
 	<script src="Boot.js"></script>
@@ -32,16 +32,14 @@ var mazenumber = 0;
 var music;
 var violin;
 var piano;
+var violinVolume = 1;
 var pianoPlaying = false;
-var violinPlaying = false;
-var violinLoud = false;
-var violinLouder = false;
-var violinLoudest = false;
+var playerChanged = false;
 var playerFrame = 0;
 var score = 0;
 var decayRate = .2;
 var numMatches = 15;
-    var closeToEnemy;
+    var enemiesNear = 0;
     var moving = false;
 window.onload = function() {
 

@@ -12,7 +12,10 @@ BasicGame.Game.prototype = {
     },
 
 	create: function () {
-        music.play('',0,1,true);
+        music.play('',0,.1,true);
+        var match = this.add.audio('matchNoise',1,true);
+        match.play('',0,1,false);
+        violin.play('',0,.1,true);
         //this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.M);
         //this.key1.onDown.add(changevolume, this);
 
@@ -179,6 +182,18 @@ BasicGame.Game.prototype = {
             moving = false;
         }
         this.updateShadowTexture();
+        if(enemiesNear > 0)
+        {
+            this.violinVolume = 50/this.LIGHT_RADIUS;
+            //this.violinVolume = 5;
+            violin.volume = this.violinVolume * 2;
+            enemiesNear = 0;
+        }
+        else
+        {
+            violin.volume = .1;
+            //violin.stop();
+        }
 
 	},
     newmaze : function(){
@@ -191,14 +206,9 @@ BasicGame.Game.prototype = {
     
     stopThings: function()
     {
-                music.stop();
-                violin.stop();
+        music.stop();
+        violin.stop();
         piano.stop();
-        violinPlaying = false;
-        pianoPlaying = false;
-        violinLoud = false;
-        violinLouder = false;
-        violinLoudest = false;
     },
 
     playerenemycollision : function(a,b){
@@ -228,7 +238,7 @@ BasicGame.Game.prototype = {
         var match = this.add.audio('matchNoise',1,true);
         match.play('',0,1,false);
         score += 10;
-        if(this.LIGHT_RADIUS < 500)
+        if(this.LIGHT_RADIUS < 600)
         {
         this.LIGHT_RADIUS += 100;
         }
@@ -251,14 +261,9 @@ BasicGame.Game.prototype = {
                         en.body.velocity.y = 50;
                         break;
         }
-        if(Math.sqrt(((en.body.position.x - this.player.position.x)*(en.body.position.x - this.player.position.x))+((en.body.position.y - this.player.position.y)*(en.body.position.y - this.player.position.y))) < 100)
+        if(Math.sqrt(((en.body.position.x - this.player.position.x)*(en.body.position.x - this.player.position.x))+((en.body.position.y - this.player.position.y)*(en.body.position.y - this.player.position.y))) < this.LIGHT_RADIUS + 5)
         {
-            closeToEnemy = true;
-            console.log("close to enemy");
-        }
-        else
-        {
-            closeToEnemy = false;
+            enemiesNear +=1;
         }
     },
 
@@ -301,21 +306,12 @@ BasicGame.Game.prototype = {
 
         this.radius = this.LIGHT_RADIUS + 30*Math.cos(this.theta);//this.game.rnd.integerInRange(1,20);
         //this.theta += 0.1;
-        if(this.LIGHT_RADIUS >= 350)
-        {
-            violin.stop();
-            piano.stop();
-            violinPlaying = false;
-            violinLoud = false;
-            violinLouder = false;
-            violinLoudest = false;
-            pianoPlaying = false;
-        }
+        //This is the decay of the light cone
         if(this.LIGHT_RADIUS > 50)
         {
             this.LIGHT_RADIUS -= decayRate;
         }
-        
+        //This makes the piano play once you are below the 330 threshold
         if(this.LIGHT_RADIUS < 330 && pianoPlaying == false)
         {
             piano.play('',0,1,true);
@@ -326,59 +322,17 @@ BasicGame.Game.prototype = {
             piano.stop();
             pianoPlaying = false;
         }
-        if(this.LIGHT_RADIUS < 300 && violinPlaying == false)
-        {
-            violin.play('',0,1,true);
-            violinPlaying = true;
-        }
-        else if(this.LIGHT_RADIUS >= 300 && violinPlaying == true)
-        {
-            violin.stop();
-            violinPlaying = false;
-        }
-        
-        if(this.LIGHT_RADIUS < 250 && violinLoud == false)
-        {
-            violin.stop();
-            violin.play('',0,2,true);
-            violinLoud = true;
-        }
-        else if(this.LIGHT_RADIUS >= 250 && violinLoud == true)
-        {
-            violin.stop();
-            violin.play('',0,1,true);
-            violinLoud = false;
-        }
-        
-        if(this.LIGHT_RADIUS < 150 && violinLouder == false)
-        {
-            violin.stop();
-            violin.play('',0,3,true);
-            violinLouder = true;
-        }
-        else if(this.LIGHT_RADIUS >= 150 && violinLouder == true)
-        {
-            violin.stop();
-            violin.play('',0,2,true);
-            violinLouder = false;
-        }
-        
-        if(this.LIGHT_RADIUS < 60 && violinLoudest == false)
-        {
-            violin.stop();
-            violin.play('',0,5,true);
-            violinLoudest = true;
-        }
-        else if(this.LIGHT_RADIUS >= 60 && violinLoudest == true)
-        {
-            violin.stop();
-            violin.play('',0,3,true);
-            violinLoudest = false;
-        }
+        //This stuff dictates the color of the light based on the size of the cone
         if(this.LIGHT_RADIUS <= 50)
         {
             var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS *                         .1,this.player.x, this.player.y, this.radius);
             gradient.addColorStop(0, 'rgba(255, 0, 0, 1.0)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+        }
+        else if(this.LIGHT_RADIUS >= 500)
+        {
+            var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS *                         .1,this.player.x, this.player.y, this.radius);
+            gradient.addColorStop(0, 'rgba(207, 181, 59, 1.0)');
             gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
         }
         else
