@@ -4,6 +4,7 @@ BasicGame.Game = function (game) {
 BasicGame.Game.prototype = {
 
     preload : function(){
+        this.stopThings;
         this.paths = new Array();
         var f = Maze.createMaze(mazesize,mazesize,spread,this.paths);
         var s = Maze.convertToCSV(f);
@@ -14,23 +15,21 @@ BasicGame.Game.prototype = {
         music.play('',0,1,true);
         this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.B);
         this.key2.onDown.add(function(){
-            music.stop();
-            violin.stop();
-        piano.stop();
-        violinPlaying = false;
-        pianoPlaying = false;
-        violinLoud = false;
-        violinLouder = false;
-            this.state.start('MainMenu')}, this);
+        this.stopThings;
+        this.state.start('MainMenu')}, this);
 
         //this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.M);
         //this.key1.onDown.add(changevolume, this);
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.theta = 0;
-        this.LIGHT_RADIUS = 300;
+        this.LIGHT_RADIUS = 350;
         this.numberofbaddies = MAJORBADDIES;
-        this.numberofbombs = MAJORBOMBS + 10;
+        this.numberofbombs = this.numberofbaddies;
+        if(numMatches > 0)
+        {
+            this.numberofbombs+= numMatches;
+        }
         this.p = {x : 0, y : 0};
         this.nextdir = [];
 
@@ -108,10 +107,9 @@ BasicGame.Game.prototype = {
         //     20, 20, '', { font: '16px Arial', fill: '#ffffff' });
         // this.fpsText.fixedToCamera = true; 
 
-        //this.times = this.add.text(10,gameheight,totalseconds+'s',{ font: '30px Arial', fill: '#ffffff' });
-        //this.times.anchor.setTo(0,1);
-        //this.times.fixedToCamera = true;
-        //this.game.time.events.loop(1000, this.updatetime, this);
+        this.times = this.add.text(10,gameheight,'Score:'+score,{ font: '30px Arial', fill: '#ffffff' });
+        this.times.anchor.setTo(0,1);
+        this.times.fixedToCamera = true;
 
         //this.leveltext = this.add.text(10,10,"World "+mazenumber,{ font: '20px Arial', fill: '#ffffff' });
         //this.leveltext.fixedToCamera = true;
@@ -126,7 +124,8 @@ BasicGame.Game.prototype = {
     },
 	update: function () 
     {
-
+        this.times.text = 'Score:'+score;
+        
 	    this.game.physics.arcade.collide(this.player, this.layer);
         this.game.physics.arcade.collide(this.player,this.flag,this.newmaze,null,this);
         this.game.physics.arcade.collide(this.player,this.enemies,this.playerenemycollision,null,this);
@@ -171,31 +170,35 @@ BasicGame.Game.prototype = {
 
 	},
     newmaze : function(){
-        music.stop();
+        this.stopThings;
+        score+=1000;
+        numMatches -=1;
+        decayRate +=.05;
+        this.state.start('Transition');
+    },
+    
+    stopThings: function()
+    {
+                music.stop();
                 violin.stop();
         piano.stop();
         violinPlaying = false;
         pianoPlaying = false;
         violinLoud = false;
         violinLouder = false;
-        this.state.start('Transition');
+        violinLoudest = false;
     },
 
     playerenemycollision : function(a,b){
         if(this.LIGHT_RADIUS <= 50){
-            music.stop();
-                    violin.stop();
-        piano.stop();
-        violinPlaying = false;
-        pianoPlaying = false;
-        violinLoud = false;
-        violinLouder = false;
+            this.stopThings;
             this.state.start('EndScreen');
         }
         else
         {
             var grunt = this.add.audio('grunt',1,true);
             grunt.play('',0,1,false);
+            score += 100;
         }
         this.LIGHT_RADIUS -= 100;
         if(this.LIGHT_RADIUS < 50)
@@ -212,6 +215,7 @@ BasicGame.Game.prototype = {
         this.bombpoints++;
         var match = this.add.audio('matchNoise',1,true);
         match.play('',0,1,false);
+        score += 10;
         if(this.LIGHT_RADIUS < 500)
         {
         this.LIGHT_RADIUS += 100;
@@ -276,38 +280,49 @@ BasicGame.Game.prototype = {
 
         this.radius = this.LIGHT_RADIUS + 30*Math.cos(this.theta);//this.game.rnd.integerInRange(1,20);
         //this.theta += 0.1;
-        if(this.LIGHT_RADIUS > 50)
-        {
-            this.LIGHT_RADIUS -= .5;
-        }
-        if(this.LIGHT_RADIUS < 250 && violinPlaying == false)
-        {
-            violin.play('',0,1,true);
-            violinPlaying = true;
-        }
-        else if(this.LIGHT_RADIUS >= 250 && violinPlaying == true)
+        if(this.LIGHT_RADIUS >= 350)
         {
             violin.stop();
+            piano.stop();
             violinPlaying = false;
+            violinLoud = false;
+            violinLouder = false;
+            violinLoudest = false;
+            pianoPlaying = false;
         }
-        if(this.LIGHT_RADIUS < 300 && pianoPlaying == false)
+        if(this.LIGHT_RADIUS > 50)
+        {
+            this.LIGHT_RADIUS -= decayRate;
+        }
+        
+        if(this.LIGHT_RADIUS < 330 && pianoPlaying == false)
         {
             piano.play('',0,1,true);
             pianoPlaying = true;
         }
-        else if(this.LIGHT_RADIUS >= 300 && pianoPlaying == true)
+        else if(this.LIGHT_RADIUS >= 330 && pianoPlaying == true)
         {
             piano.stop();
             pianoPlaying = false;
         }
-        
-        if(this.LIGHT_RADIUS < 200 && violinLoud == false)
+        if(this.LIGHT_RADIUS < 300 && violinPlaying == false)
+        {
+            violin.play('',0,1,true);
+            violinPlaying = true;
+        }
+        else if(this.LIGHT_RADIUS >= 300 && violinPlaying == true)
         {
             violin.stop();
-            violin.play('',0,3,true);
+            violinPlaying = false;
+        }
+        
+        if(this.LIGHT_RADIUS < 250 && violinLoud == false)
+        {
+            violin.stop();
+            violin.play('',0,2,true);
             violinLoud = true;
         }
-        else if(this.LIGHT_RADIUS >= 200 && violinLoud == true)
+        else if(this.LIGHT_RADIUS >= 250 && violinLoud == true)
         {
             violin.stop();
             violin.play('',0,1,true);
@@ -317,18 +332,41 @@ BasicGame.Game.prototype = {
         if(this.LIGHT_RADIUS < 150 && violinLouder == false)
         {
             violin.stop();
-            violin.play('',0,5,true);
+            violin.play('',0,3,true);
             violinLouder = true;
         }
         else if(this.LIGHT_RADIUS >= 150 && violinLouder == true)
         {
             violin.stop();
-            violin.play('',0,3,true);
+            violin.play('',0,2,true);
             violinLouder = false;
         }
-        var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS * .1,this.player.x, this.player.y, this.radius);
+        
+        if(this.LIGHT_RADIUS < 60 && violinLoudest == false)
+        {
+            violin.stop();
+            violin.play('',0,5,true);
+            violinLoudest = true;
+        }
+        else if(this.LIGHT_RADIUS >= 60 && violinLoudest == true)
+        {
+            violin.stop();
+            violin.play('',0,3,true);
+            violinLoudest = false;
+        }
+        if(this.LIGHT_RADIUS <= 50)
+        {
+                var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS *                         .1,this.player.x, this.player.y, this.radius);
+                gradient.addColorStop(0, 'rgba(255, 0, 0, 1.0)');
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+        }
+        else
+        {
+                    var gradient = this.shadowTexture.context.createRadialGradient(this.player.x, this.player.y,this.LIGHT_RADIUS * .1,this.player.x, this.player.y, this.radius);
         gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+        }
+
 
         this.shadowTexture.context.beginPath();
         this.shadowTexture.context.fillStyle = gradient;
@@ -346,13 +384,7 @@ BasicGame.Game.prototype = {
 		//	Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
 		//	Then let's go back to the main menu.
-        music.stop();
-        violin.stop();
-        piano.stop();
-        violinPlaying = false;
-        pianoPlaying = false;
-        violinLoud = false;
-        violinLouder = false;
+        this.stopThings;
 		this.state.start('MainMenu');
 
 	}

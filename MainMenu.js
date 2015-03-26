@@ -22,7 +22,7 @@ BasicGame.MainMenu.prototype = {
 		enemytotal = 0;
 		this.titleimage = this.add.sprite(this.world.centerX, 0, 'title');
 		this.titleimage.anchor.setTo(0.5,0);
-		this.playButton = this.add.button(this.world.centerX, this.world.centerY+100, 'play', this.startGame, this, 1,0,2);
+		this.playButton = this.add.button(this.world.centerX, this.world.centerY+200, 'play', this.startGame, this, 1,0,2);
     	this.playButton.anchor.setTo(0.5,0.5);
 
 	},
@@ -71,7 +71,7 @@ BasicGame.EndScreen.prototype =
 
 		this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.key1.onDown.add(this.startGame, this);
-		this.scoretext = this.add.text(this.world.centerX,this.world.centerY,'You survived '+enemytotal+' monster encounters',{ font: '20px Arial', fill: '#ffffff' });
+		this.scoretext = this.add.text(this.world.centerX,this.world.centerY,'You scored '+score +' points',{ font: '20px Arial', fill: '#ffffff' });
 		this.scoretext.anchor.setTo(0.5,0.5);
 		this.mazetext = this.add.text(this.world.centerX,this.world.centerY+42,'and descended '+mazenumber+' levels',{ font: '20px Arial', fill: '#ffffff' });
 		this.mazetext.anchor.setTo(0.5,0.5);
@@ -84,9 +84,9 @@ BasicGame.EndScreen.prototype =
     	this.overlay.animations.play('run',9,true);
 
     	this.cursors = this.game.input.keyboard.createCursorKeys();
-
-
-
+        score = 0;
+        numMatches =15;
+        decayRate =.2;
 	},
 
 	update : function(){

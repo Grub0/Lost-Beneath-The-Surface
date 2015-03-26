@@ -33,7 +33,11 @@ var pianoPlaying = false;
 var violinPlaying = false;
 var violinLoud = false;
 var violinLouder = false;
+var violinLoudest = false;
 var playerFrame = 0;
+var score = 0;
+var decayRate = .2;
+var numMatches = 15;
 window.onload = function() {
 
 	//	Create your Phaser game and inject it into the gameContainer div.
