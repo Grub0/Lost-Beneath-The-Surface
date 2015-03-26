@@ -105,6 +105,7 @@ BasicGame.Game.prototype = {
         this.times = this.add.text(10,gameheight,'Score:'+score,{ font: '30px Arial', fill: '#ffffff' });
         this.times.anchor.setTo(0,1);
         this.times.fixedToCamera = true;
+        this.game.time.events.loop(200, this.updatetime, this);
 
         //this.leveltext = this.add.text(10,10,"World "+mazenumber,{ font: '20px Arial', fill: '#ffffff' });
         //this.leveltext.fixedToCamera = true;
@@ -114,8 +115,19 @@ BasicGame.Game.prototype = {
         //this.enemykills.fixedToCamera = true;
 	},
     updatetime : function(){
-        totalseconds++;
-        this.times.setText(totalseconds+'s');
+        if(moving == true)
+          {
+        if(playerFrame == 0)
+        {
+            this.player.loadTexture('firebug');
+            playerFrame = 1;
+        }
+        else if(playerFrame == 1)
+        {
+            this.player.loadTexture('firebug2');
+            playerFrame = 0;
+        }
+          }
     },
 	update: function () 
     {
@@ -147,12 +159,12 @@ BasicGame.Game.prototype = {
             this.player.angle = 0;
             this.currentSpeed = playerSpeed;
         }
-        if (this.cursors.up.isDown)
+        else if (this.cursors.up.isDown)
         {
             this.player.angle = 270;
             this.currentSpeed = playerSpeed;
         }
-        if (this.cursors.down.isDown)
+        else if (this.cursors.down.isDown)
         {
             this.player.angle = 90;
             this.currentSpeed = playerSpeed;
@@ -160,6 +172,11 @@ BasicGame.Game.prototype = {
         if (this.currentSpeed != 0)
         {
             this.game.physics.arcade.velocityFromRotation(this.player.rotation, this.currentSpeed, this.player.body.velocity);
+            moving = true;
+        }
+        else
+        {
+            moving = false;
         }
         this.updateShadowTexture();
 
